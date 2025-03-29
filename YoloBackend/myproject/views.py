@@ -70,6 +70,30 @@ assistant = client.beta.assistants.create(
           "required": []
         }
       }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "navigate_user_to",
+        "description": "Navigate the user to a coordinate, confirm with user first before calling",
+        "strict": True,
+        "parameters": {
+          "type": "object",
+          "required": [
+            "latitude",
+            "longitude",
+          ],
+          "properties": {
+            "latitude": {
+              "type": "number"
+            },
+            "longitude": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": False
+        }
+      }
     }
   ]
 )
@@ -170,6 +194,16 @@ def assistant_service(request):
         return JsonResponse({"error": "Invalid request method."}, status=400)
 
 
+@csrf_exempt
+def refresh_thread(request):
+    global thread
+    try:
+      client.beta.threads.delete(thread.id)
+    except Exception as e:
+      print(f"Exception!!!!!! {str(e)}")
+    thread = client.beta.threads.create()
+    return JsonResponse({"good": "New thread created."}, status=200)
+
 
 @csrf_exempt
 def assistant_tool_completion_from_client(request):
@@ -241,7 +275,13 @@ def newActionRequired(run, response):
             })
           
             need_client_action = True
-            
+        elif tool.function.name == "navigate_user_to":
+            response["required_actions"].append({
+                "tool_call_id": tool.id,
+                "function_name": "navigate_user_to",
+                "arguments": tool.function.arguments
+            })
+            need_client_action = True    
         elif tool.function.name == "get_available_keywords":
             print(f"chatgpt asked for keywords, call id: {tool.id}")
             tool_outputs.append({

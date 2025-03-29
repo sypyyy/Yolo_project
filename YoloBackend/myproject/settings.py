@@ -28,9 +28,10 @@ SECRET_KEY = 'django-insecure-r!p%b4&3&uw9ba3py7gfo2o%z)(b#i@842(kg*9mc9z&o724q*
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    '127.0.0.1',   # Localhost
+    '127.0.0.1',  # Localhost
     'localhost',   # Localhost
-    '192.168.1.43' # Your Mac's IP address in wifi
+    '192.168.1.42', # Your Mac's IP address in wifi
+    'django-env.eba-dpmriiwt.us-west-1.elasticbeanstalk.com'
 ]
 
 # Application definition

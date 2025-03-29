@@ -22,4 +22,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('chat/', views.assistant_service, name='assistant_service'),
     path('client_action_done/', views.assistant_tool_completion_from_client, name='assistant_tool_completion_from_client'),  # For API integration
+    path('refesh_thread/', views.refresh_thread, name = "refresh_thread")
 ]
